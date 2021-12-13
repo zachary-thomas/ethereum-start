@@ -10,6 +10,7 @@ const {interface, bytecode} = require('../compile');
 const web3 = new Web3(ganache.provider());
 let accounts;
 let inbox;
+const INITIAL_STRING = 'Hi there!';
 
 // Note the async keyword
 beforeEach( async () => {
@@ -27,7 +28,7 @@ beforeEach( async () => {
     // ABI - tells what methods the contract has
     inbox = await new web3.eth.Contract(JSON.parse(interface))
         // Deploy a new copy of the contract, arguments call the constructor
-        .deploy({data: bytecode, arguments: ['Hi there!']}) 
+        .deploy({data: bytecode, arguments: [INITIAL_STRING]}) 
         // Send out a transaction to create the contract
         .send({from: accounts[0], gas: '1000000'})
 
@@ -36,5 +37,11 @@ beforeEach( async () => {
 describe('Inbox', () => {
     it('successfully deploys a contract', () => {
         assert.ok(inbox.options.address);
-    })
+    });
+
+    it('has a default message', async () =>{
+        // reference the contract's methods, get message, call with transaction value (if needed)
+        const message = await inbox.methods.message().call();
+        assert.equal(message, INITIAL_STRING);
+    });
 })

@@ -44,4 +44,11 @@ describe('Inbox', () => {
         const message = await inbox.methods.message().call();
         assert.equal(message, INITIAL_STRING);
     });
-})
+
+    it('can change the message', async () => {
+        // Send new message, spend gas from account 0
+        await inbox.methods.setMessage('bye').send({ from: accounts[0] });
+        const message = await inbox.methods.message().call();
+        assert.equal(message, 'bye');
+    });
+});

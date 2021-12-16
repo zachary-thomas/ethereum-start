@@ -3,7 +3,7 @@ const ganache = require('ganache-cli');
 // Constructor function, capitilized
 const Web3 = require('web3');
 const {interface, bytecode} = require('../compile');
-
+import Constants from '../constants.js'
 
 // Instance of web3 to connect to test network
 // through the provider (provider depends on network)
@@ -46,7 +46,7 @@ describe('Inbox', () => {
     });
 
     it('can change the message', async () => {
-        // Send new message, spend gas from account 0
+        // Send new message
         await inbox.methods.setMessage('bye').send({ from: accounts[0] });
         const message = await inbox.methods.message().call();
         assert.equal(message, 'bye');

@@ -3,7 +3,8 @@ const ganache = require('ganache-cli');
 // Constructor function, capitilized
 const Web3 = require('web3');
 const {interface, bytecode} = require('../compile');
-import Constants from '../constants.js'
+//import Constants from '../constants.js'
+const constants = require('../constants')
 
 // Instance of web3 to connect to test network
 // through the provider (provider depends on network)

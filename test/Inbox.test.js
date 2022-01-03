@@ -2,7 +2,7 @@ const assert = require('assert');
 const ganache = require('ganache-cli');
 // Constructor function, capitilized
 const Web3 = require('web3');
-const {interface, bytecode} = require('../compile');
+const { abi, evm } = require('../compile');
 //import Constants from '../constants.js'
 const constants = require('../constants')
 
@@ -27,9 +27,9 @@ beforeEach( async () => {
 
     // Use one of those accounts to deploy the contract
     // ABI - tells what methods the contract has
-    inbox = await new web3.eth.Contract(JSON.parse(interface))
+    inbox = await new web3.eth.Contract(abi)
         // Deploy a new copy of the contract, arguments call the constructor
-        .deploy({data: bytecode, arguments: [INITIAL_STRING]}) 
+        .deploy({data: evm.bytecode.object, arguments: [INITIAL_STRING]}) 
         // Send out a transaction to create the contract
         .send({from: accounts[0], gas: '1000000'})
 
@@ -42,12 +42,14 @@ describe('Inbox', () => {
 
     it('has a default message', async () =>{
         // reference the contract's methods, get message, call with transaction value (if needed)
+        // call is read only
         const message = await inbox.methods.message().call();
         assert.equal(message, INITIAL_STRING);
     });
 
     it('can change the message', async () => {
         // Send new message
+        // send needs to wait on the blockchain
         await inbox.methods.setMessage('bye').send({ from: accounts[0] });
         const message = await inbox.methods.message().call();
         assert.equal(message, 'bye');

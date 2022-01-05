@@ -29,9 +29,12 @@ beforeEach( async () => {
     // ABI - tells what methods the contract has
     inbox = await new web3.eth.Contract(abi)
         // Deploy a new copy of the contract, arguments call the constructor
-        .deploy({data: evm.bytecode.object, arguments: [INITIAL_STRING]}) 
+        .deploy({
+            data: evm.bytecode.object, 
+            arguments: [INITIAL_STRING]
+        }) 
         // Send out a transaction to create the contract
-        .send({from: accounts[0], gas: '1000000'})
+        .send({from: accounts[0], gas: '1000000'});
 
 });
 
